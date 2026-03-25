@@ -11,9 +11,17 @@ const app = express();
 // ─── Middleware ───────────────────────────────────────────────────────────────
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) {
+    // Allow localhost during development, and the live frontend URL
+    if (
+      !origin || 
+      origin.startsWith('http://localhost:') || 
+      origin.startsWith('http://127.0.0.1:') ||
+      origin.includes('onrender.com') ||
+      (process.env.FRONTEND_URL && origin === process.env.FRONTEND_URL)
+    ) {
       callback(null, true);
     } else {
+      console.log('Blocked by CORS:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
