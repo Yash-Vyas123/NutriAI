@@ -11,7 +11,7 @@ const DietPlanPage = () => {
     setLoading(true);
     setPlan(null);
     try {
-      const { data } = await api.get('/ai/daily-plan');
+      const { data } = await api.get('ai/daily-plan');
       setPlan(data);
       toast.success('Your new meal plan is ready!');
     } catch (err) {

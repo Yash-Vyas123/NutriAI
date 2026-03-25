@@ -11,7 +11,7 @@ const DashboardPage = () => {
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
-        const { data } = await api.get('/health/profile');
+        const { data } = await api.get('health/profile');
         setProfile(data);
       } catch (err) {
         console.error(err);

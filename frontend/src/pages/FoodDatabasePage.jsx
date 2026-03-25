@@ -11,7 +11,7 @@ const FoodDatabasePage = () => {
   const fetchFoods = async (searchQuery = '') => {
     setLoading(true);
     try {
-      const endpoint = searchQuery ? `/food/search?q=${searchQuery}` : '/food/all';
+      const endpoint = searchQuery ? `food/search?q=${searchQuery}` : 'food/all';
       const { data } = await api.get(endpoint);
       setFoods(data);
     } catch (err) {

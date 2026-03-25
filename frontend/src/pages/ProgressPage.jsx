@@ -16,7 +16,7 @@ const ProgressPage = () => {
 
   const fetchProgress = async () => {
     try {
-      const { data } = await api.get('/progress/history');
+      const { data } = await api.get('progress/history');
       if (Array.isArray(data)) {
         const formatted = data.map(log => ({
           ...log,
@@ -50,7 +50,7 @@ const ProgressPage = () => {
     if (!weight) return toast.error('Please enter your weight');
 
     try {
-      await api.post('/progress/log', {
+      await api.post('progress/log', {
         weight: Number(weight),
         caloriesConsumed: Number(calories) || 0,
         notes

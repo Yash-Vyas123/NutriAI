@@ -36,7 +36,7 @@ const ChatbotPage = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const { data } = await api.get('/health/profile');
+        const { data } = await api.get('health/profile');
         setProfile(data);
       } catch (err) { }
     };
@@ -54,7 +54,7 @@ const ChatbotPage = () => {
     setLoading(true);
 
     try {
-      const { data } = await api.post('/ai/chat', { message: currentInput });
+      const { data } = await api.post('ai/chat', { message: currentInput });
       if (data && data.reply) {
         setMessages(prev => [...prev, { role: 'assistant', text: data.reply }]);
       } else {

@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    const { data } = await api.post('/auth/login', { email, password });
+    const { data } = await api.post('auth/login', { email, password });
     localStorage.setItem('nutriai_token', data.token);
     localStorage.setItem('nutriai_user', JSON.stringify(data.user));
     setUser(data.user);
@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (name, email, password) => {
-    const { data } = await api.post('/auth/register', { name, email, password });
+    const { data } = await api.post('auth/register', { name, email, password });
     localStorage.setItem('nutriai_token', data.token);
     localStorage.setItem('nutriai_user', JSON.stringify(data.user));
     setUser(data.user);

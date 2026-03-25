@@ -56,7 +56,7 @@ const UserProfilePage = () => {
 
     setUploading(true);
     try {
-      const { data } = await api.post('/auth/upload', uploadData, {
+      const { data } = await api.post('auth/upload', uploadData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       updateUser(data);
@@ -74,7 +74,7 @@ const UserProfilePage = () => {
     setLoading(true);
 
     try {
-      const { data } = await api.put('/auth/update', formData);
+      const { data } = await api.put('auth/update', formData);
       updateUser({ ...user, ...data });
       toast.success('Profile updated successfully!');
     } catch (err) {

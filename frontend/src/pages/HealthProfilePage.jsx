@@ -20,8 +20,9 @@ const HealthProfilePage = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      try {
-        const { data } = await api.get('/health/profile');
+    try {
+      const { data } = await api.get('health/profile');
+      if (data) {
         setFormData({
           age: data.age || '',
           gender: data.gender || 'male',
@@ -32,21 +33,22 @@ const HealthProfilePage = () => {
           foodPreference: data.foodPreference || 'vegetarian',
           healthConditions: data.healthConditions || 'None',
         });
-      } catch (err) { }
-    };
-    fetchProfile();
-  }, []);
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+      }
+    } catch (err) { }
   };
+  fetchProfile();
+}, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+const handleChange = (e) => {
+  setFormData({ ...formData, [e.target.name]: e.target.value });
+};
 
-    try {
-      await api.post('/health/profile', formData);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+
+  try {
+    await api.post('health/profile', formData);
       toast.success('Your health profile is updated!');
       navigate('/dashboard');
     } catch (err) {
