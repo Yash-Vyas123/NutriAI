@@ -1,5 +1,6 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const HealthProfile = require('../models/HealthProfile');
+const DailyPlan = require('../models/DailyPlan');
 
 // Only 'gemini-flash-latest' works for this key/setup.
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
@@ -41,6 +42,17 @@ const getDailyPlan = async (req, res) => {
     const profile = await HealthProfile.findOne({ user: req.user.id });
     if (!profile) return res.status(404).json({ message: 'Setup your profile first.' });
 
+    const today = new Date().toISOString().split('T')[0];
+    const { force } = req.query;
+
+    // Return cached plan for today if user is not forcing a new generation
+    if (force !== 'true') {
+      const cachedPlan = await DailyPlan.findOne({ user: req.user.id, date: today });
+      if (cachedPlan) {
+        return res.json(cachedPlan);
+      }
+    }
+
     const context = buildUserContext(profile);
     const prompt = `Act as an expert nutritionist. Create a personalized daily meal plan for the following user:
 Context: ${context}
@@ -63,7 +75,16 @@ DO NOT include any explanation or markdown, ONLY provide the raw JSON.`;
 
     const result = await model.generateContent(prompt);
     const text = result.response.text();
-    res.json(parseAIResponse(text));
+    const parsedData = parseAIResponse(text);
+
+    // Save or update the daily plan in the database
+    await DailyPlan.findOneAndUpdate(
+      { user: req.user.id, date: today },
+      { ...parsedData, user: req.user.id, date: today },
+      { upsert: true, new: true }
+    );
+
+    res.json(parsedData);
   } catch (err) {
     console.error('❌ Daily Plan AI Error:', err.message);
     if (err.status === 429) {

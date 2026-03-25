@@ -7,15 +7,17 @@ const DietPlanPage = () => {
   const [plan, setPlan] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const fetchPlan = async () => {
+  const fetchPlan = async (force = false) => {
     setLoading(true);
     setPlan(null);
     try {
-      const { data } = await api.get('ai/daily-plan');
+      const { data } = await api.get(`ai/daily-plan${force ? '?force=true' : ''}`);
       setPlan(data);
-      toast.success('Your new meal plan is ready!');
+      if (force) {
+        toast.success('Your new meal plan is ready!');
+      }
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to create your plan');
+      toast.error(err.response?.data?.message || 'Failed to load your plan');
     } finally {
       setLoading(false);
     }
@@ -96,7 +98,7 @@ const DietPlanPage = () => {
         </div>
         
         <button 
-          onClick={fetchPlan} 
+          onClick={() => fetchPlan(true)} 
           disabled={loading} 
           className="group w-full md:w-auto bg-white hover:bg-green-500 text-slate-900 font-black py-4 px-8 rounded-2xl transition-all active:scale-[0.98] flex items-center justify-center gap-3 shadow-xl"
         >
